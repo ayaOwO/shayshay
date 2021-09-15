@@ -77,4 +77,8 @@ async def on_message(message):
         if (msg in commands):
             await message.channel.send(commands[msg.strip()]())
 
-client.run("ODYzNzY1MDY3NTc3Mjk0ODU4.YOrp6A.aPf_PnQNateoO2_zVEEeQwFSpMI") 
+# running bot
+file = open("bot.token")
+token = file.read()
+file.close()
+client.run(token) 
