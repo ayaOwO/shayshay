@@ -1,0 +1,2 @@
+python shayshayBot.py
+pause
