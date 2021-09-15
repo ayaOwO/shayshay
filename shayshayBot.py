@@ -10,6 +10,7 @@ client = discord.Client()
 bot = commands.Bot(command_prefix='שישי')
 
 pre = "שישי"
+lastCommand = "מתי אבישי"
 def getShabat():
     output = "```css"
 
@@ -22,7 +23,7 @@ def getShabat():
             endTimeObj = extractTime(event)
             if (endTimeObj.weekday() == 5):  # shabat ends at Saturday
                 output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
-    return output + prettyPrintTime(startTimeObj, endTimeObj, "avishay comes back", "Avishay is here!!")
+    return output + prettyPrintTime(startTimeObj, endTimeObj, "Time until avishay comes back", "Time left with avishay", "Avishay is here!!")
 
 def slap():
     return "Slap:wave: <@375656966145703946>"
@@ -38,11 +39,15 @@ def getItay():
  
 
 def getYomKippur():
+    output = "```css"
     for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
-        if "title" in event.keys() and event["title"] == "Erev Yom Kippur":
-            print("hu")
-
-    return 1#prettyPrintTime()
+        if "memo" in event.keys() and event["memo"] == "Erev Yom Kippur":
+            startTimeObj = extractTime(event)
+            output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
+        elif "memo" in event.keys() and event["memo"] == "Yom Kippur":
+            endTimeObj = extractTime(event)
+            output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
+    return output + prettyPrintTime(startTimeObj, endTimeObj, "Time until the start of the chom", "Time left until you can eat", "you can eat! do eat! now!")
 
 
 def extractTime(event):
@@ -51,17 +56,17 @@ def extractTime(event):
     time[1] = time[1].split(":")
     return datetime.datetime(int(time[0][0]), int(time[0][1]), int(time[0][2]), int(time[1][0]), int(time[1][1]))
 
-def prettyPrintTime(start, end, until, happened):
-    if (datetime.datetime.now() > end):
+def prettyPrintTime(start, end, until, happening, happened):
+    if (datetime.datetime.now() > end):  # after the event ended
         output = "\n\n" + happened + "```"
-    elif (datetime.datetime.now() > start):
+    elif (datetime.datetime.now() > start):  # in the event
         diff = end - datetime.datetime.now()
-        output = "\n\nTime until" + until + ":\n"
+        output = "\n\n" + happening + ":\n"
         tot = diff.total_seconds()
         output += str(math.floor(tot)) + " seconds\n" + str(math.floor(tot / 60)) + " minutes\n" + str(math.floor(tot / 60/60)) + " hours\n" + str(math.floor(tot / 60 / 30)) + " average lol games```"
-    else:
+    else:  # before the event
         diff = start - datetime.datetime.now() # get diff
-        output = "\n\nTime left with avishay:\n"
+        output = "\n\n" + until + ":\n"
         tot = diff.total_seconds()
         output += str(math.floor(tot)) + " seconds\n" + str(math.floor(tot / 60)) + " minutes\n" + str(math.floor(tot / 60/60)) + " hours\n" + str(math.floor(tot / 60 / 30)) + " average lol games```"
     return output
@@ -71,7 +76,7 @@ commands = {"מתי אבישי": getShabat, "מתי אבישישי": getShabat, 
     "כאפה לאבישי": slap, "כאפה לאבשישי": slap,
     "מי הוא אבישי": avishayHater, "מי הוא אבשישי": avishayHater, "מי אבישי": avishayHater, "מי אבשישי": avishayHater,
     "מתי איתי": getItay,
-    "שישי אני רעב": getYomKippur, "שישי אני רעבה": getYomKippur}
+    "אני רעב": getYomKippur, "אני רעבה": getYomKippur}
 
 @client.event
 async def on_ready():
@@ -79,13 +84,18 @@ async def on_ready():
 @client.event
 
 async def on_message(message):
+    global lastCommand
     if (message.author == client.user):
         return
 
     if message.content.startswith(pre):
         msg = message.content[len(pre):].strip()
-        if (msg in commands):
-            await message.channel.send(commands[msg.strip()]())
+        if (msg == ""):
+            await message.channel.send(commands[lastCommand]())
+        elif (msg in commands):
+            await message.channel.send(commands[msg]())
+            lastCommand = msg
+
 
 # running bot
 file = open("bot.token")
