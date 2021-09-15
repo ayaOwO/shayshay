@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # bot token file
-.token
+*.token
