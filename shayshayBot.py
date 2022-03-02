@@ -23,7 +23,7 @@ def getShabat():
             endTimeObj = extractTime(event)
             if (endTimeObj.weekday() == 5):  # shabat ends at Saturday
                 output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
-    return output + prettyPrintTime(startTimeObj, endTimeObj, "Time until avishay comes back", "Time left with avishay", "Avishay is here!!")
+    return output + prettyPrintTime(startTimeObj, endTimeObj, "Time left with avishay", "Time until avishay comes back", "Avishay is here!!")
 
 def slap():
     return "Slap:wave: <@375656966145703946>"
@@ -101,4 +101,5 @@ async def on_message(message):
 file = open("bot.token")
 token = file.read()
 file.close()
+print(f'token is {token}')
 client.run(token) 
