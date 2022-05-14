@@ -13,17 +13,21 @@ pre = "שישי"
 lastCommand = "מתי אבישי"
 def getShabat():
     output = "```css"
+    try:
+        for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
+            if ("title_orig" in event.keys() and event["title_orig"] == "Candle lighting"):
+                startTimeObj = extractTime(event)
+                if (startTimeObj.weekday() == 4):  # shabat starts at Friday
+                    output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
+            elif ("title_orig" in event.keys() and event["title_orig"] == "Havdalah"):
+                endTimeObj = extractTime(event)
+                if (endTimeObj.weekday() == 5):  # shabat ends at Saturday
+                    output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
+    
+        return output + prettyPrintTime(startTimeObj, endTimeObj, "time left with avishay", "Time until avishay comes back", "Avishay is here!!")
+    except Exception as e:
+         return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
 
-    for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
-        if ("title_orig" in event.keys() and event["title_orig"] == "Candle lighting"):
-            startTimeObj = extractTime(event)
-            if (startTimeObj.weekday() == 4):  # shabat starts at Friday
-                output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
-        elif ("title_orig" in event.keys() and event["title_orig"] == "Havdalah"):
-            endTimeObj = extractTime(event)
-            if (endTimeObj.weekday() == 5):  # shabat ends at Saturday
-                output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
-    return output + prettyPrintTime(startTimeObj, endTimeObj, "Time left with avishay", "Time until avishay comes back", "Avishay is here!!")
 
 def slap():
     return "Slap:wave: <@375656966145703946>"
@@ -40,14 +44,18 @@ def getItay():
 
 def getYomKippur():
     output = "```css"
-    for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
-        if "memo" in event.keys() and event["memo"] == "Erev Yom Kippur":
-            startTimeObj = extractTime(event)
-            output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
-        elif "memo" in event.keys() and event["memo"] == "Yom Kippur":
-            endTimeObj = extractTime(event)
-            output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
-    return output + prettyPrintTime(startTimeObj, endTimeObj, "Time until the start of the chom", "Time left until you can eat", "you can eat! do eat! now!")
+    try:
+        for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
+            if "memo" in event.keys() and event["memo"] == "Erev Yom Kippur":
+                startTimeObj = extractTime(event)
+                output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
+            elif "memo" in event.keys() and event["memo"] == "Yom Kippur":
+                endTimeObj = extractTime(event)
+                output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
+        return output + prettyPrintTime(startTimeObj, endTimeObj, "Time until the start of the chom", "Time left until you can eat", "you can eat! do eat! now!")
+    except Exception as e:
+         return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
+
 
 
 def extractTime(event):
@@ -74,9 +82,7 @@ def prettyPrintTime(start, end, until, happening, happened):
 
 commands = {"מתי אבישי": getShabat, "מתי אבישישי": getShabat, "מתי אבשישי": getShabat, "מתי שבת": getShabat,
     "כאפה לאבישי": slap, "כאפה לאבשישי": slap,
-    "מי הוא אבישי": avishayHater, "מי הוא אבשישי": avishayHater, "מי אבישי": avishayHater, "מי אבשישי": avishayHater,
-    "מתי איתי": getItay,
-    "אני רעב": getYomKippur, "אני רעבה": getYomKippur}
+    "מי הוא אבישי": avishayHater, "מי הוא אבשישי": avishayHater, "מי אבישי": avishayHater, "מי אבשישי": avishayHater}
 
 @client.event
 async def on_ready():
@@ -103,3 +109,5 @@ token = file.read()
 file.close()
 print(f'token is {token}')
 client.run(token) 
+import discord
+from discord.ext import tasks, commands
