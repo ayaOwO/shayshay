@@ -13,18 +13,22 @@ pre = "שישי"
 lastCommand = "מתי אבישי"
 def getShabat():
     output = "```css"
+    startTimeObj = ""
+    endTimeObj = ""
     try:
         for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
-            if ("title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and startTimeObj != ""):
+            if ("title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and startTimeObj == ""):
                 startTimeObj = extractTime(event)
                 output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
-            elif ("title_orig" in event.keys() and event["title_orig"] == "Havdalah" and endTimeObj != ""):
+            elif ("title_orig" in event.keys() and event["title_orig"] == "Havdalah" and endTimeObj == ""):
                 endTimeObj = extractTime(event)
                 output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
     
         return output + prettyPrintTime(startTimeObj, endTimeObj, "time left with avishay", "Time until avishay comes back", "Avishay is here!!")
     except Exception as e:
-         return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
+        with open("log.txt", "a") as logFile:
+            logFile.write(f"{e}")
+        return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
 
 
 def slap():
@@ -109,3 +113,4 @@ print(f'token is {token}')
 client.run(token) 
 import discord
 from discord.ext import tasks, commands
+
