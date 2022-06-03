@@ -15,14 +15,12 @@ def getShabat():
     output = "```css"
     try:
         for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
-            if ("title_orig" in event.keys() and event["title_orig"] == "Candle lighting"):
+            if ("title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and startTimeObj != ""):
                 startTimeObj = extractTime(event)
-                if (startTimeObj.weekday() == 4):  # shabat starts at Friday
-                    output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
-            elif ("title_orig" in event.keys() and event["title_orig"] == "Havdalah"):
+                output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
+            elif ("title_orig" in event.keys() and event["title_orig"] == "Havdalah" and endTimeObj != ""):
                 endTimeObj = extractTime(event)
-                if (endTimeObj.weekday() == 5):  # shabat ends at Saturday
-                    output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
+                output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
     
         return output + prettyPrintTime(startTimeObj, endTimeObj, "time left with avishay", "Time until avishay comes back", "Avishay is here!!")
     except Exception as e:
