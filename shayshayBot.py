@@ -36,13 +36,21 @@ def slap():
 
 def avishayHater():
     return "אבישי הייטר"
+
 def giveCookie():
     return ":cookie:"
 
-def getItay():
-    #workEnd = datetime.datetime(18, 0)
-    return "Time left with Itay:\n" #, datetime.datetime(18, 0) - datetime.datetime.now()
- 
+def helpCommand():
+    return """```
+פקודות:
+1. שישי מתי אבישי
+2. שישי כאפה לאבישי
+3. שישי כאפה לגיא
+4. שישי מי הוא אבישי```
+"""
+
+def guySlap():
+    return "Slap:wave: <@923925364756078594>"
 
 def getYomKippur():
     output = "```css"
@@ -84,7 +92,10 @@ def prettyPrintTime(start, end, until, happening, happened):
 
 commands = {"מתי אבישי": getShabat, "מתי אבישישי": getShabat, "מתי אבשישי": getShabat, "מתי שבת": getShabat,
     "כאפה לאבישי": slap, "כאפה לאבשישי": slap,
-    "מי הוא אבישי": avishayHater, "מי הוא אבשישי": avishayHater, "מי אבישי": avishayHater, "מי אבשישי": avishayHater}
+    "מי הוא אבישי": avishayHater, "מי הוא אבשישי": avishayHater, "מי אבישי": avishayHater, "מי אבשישי": avishayHater,
+    "עזרה": helpCommand, "חלפ": helpCommand,
+    "כאפה לגיא": guySlap
+    }
 
 @client.event
 async def on_ready():
@@ -111,6 +122,4 @@ token = file.read()
 file.close()
 print(f'token is {token}')
 client.run(token) 
-import discord
-from discord.ext import tasks, commands
 
