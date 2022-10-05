@@ -52,6 +52,12 @@ def helpCommand():
 def guySlap():
     return "Slap:wave: <@923925364756078594>"
 
+def genericSlap(username):
+    if (username.startswith("ל")):
+        username = username[1:]
+    return f"Slap:wave: {username}"
+
+
 def getYomKippur():
     output = "```css"
     try:
@@ -114,6 +120,9 @@ async def on_message(message):
         elif (msg in commands):
             await message.channel.send(commands[msg]())
             lastCommand = msg
+        elif (msg.split(" ")[0] == "כאפה"):
+            await message.channel.send(genericSlap(msg.split(" ")[1]))
+
 
 
 # running bot
