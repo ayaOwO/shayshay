@@ -110,20 +110,25 @@ async def on_ready():
 @client.event
 
 async def on_message(message):
-    global lastCommand
-    if (message.author == client.user):
-        return
+    try:
+        global lastCommand
+        if (message.author == client.user):
+            return
 
-    if message.content.startswith(pre):
-        msg = message.content[len(pre):].strip()
-        if (msg == ""):
-            await message.channel.send(commands[lastCommand]())
-        elif (msg in commands):
-            await message.channel.send(commands[msg]())
-            lastCommand = msg
-        elif (msg.split(" ")[0] == "כאפה"):
-            await message.channel.send(genericSlap(msg.split(" ")[1]))
-
+        if message.content.startswith(pre):
+            msg = message.content[len(pre):].strip()
+            if (msg == ""):
+                await message.channel.send(commands[lastCommand]())
+            elif (msg in commands):
+                await message.channel.send(commands[msg]())
+                lastCommand = msg
+            elif (msg.split(" ")[0] == "כאפה"):
+                await message.channel.send(genericSlap(msg.split(" ")[-1]))
+    except Exception as e:
+        with open("log.txt", "w") as filer:
+            filer.write(e)
+            filer.write(datetime.now())
+        raise
 
 
 # running bot
