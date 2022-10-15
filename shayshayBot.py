@@ -100,7 +100,8 @@ commands = {"מתי אבישי": getShabat, "מתי אבישישי": getShabat, 
     "כאפה לאבישי": slap, "כאפה לאבשישי": slap,
     "מי הוא אבישי": avishayHater, "מי הוא אבשישי": avishayHater, "מי אבישי": avishayHater, "מי אבשישי": avishayHater,
     "עזרה": helpCommand, "חלפ": helpCommand,
-    "כאפה לגיא": guySlap
+    "כאפה לגיא": guySlap,
+    "דקירה": lambda: "🔪 🩸"
     }
 
 @client.event
