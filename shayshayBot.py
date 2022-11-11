@@ -1,16 +1,28 @@
 import discord
+from discord import app_commands 
 from discord.ext import tasks, commands
 import json # shabat
 import requests
 import datetime
 import math
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.message_content = True
+
+client = discord.Client(intents=intents)
+
 # functions
-bot = commands.Bot(command_prefix='שישי')
+#bot = commands.Bot(command_prefix='שישי')
+bot = commands.Bot(command_prefix='$', intents=intents)
+tree = app_commands.CommandTree(client)
 
 pre = "שישי"
 lastCommand = "מתי אבישי"
+
+@tree.command(name="שבת", description="Tells you when avishays comes back, so the grind can continue", guild=discord.Object(id=843477859020308510))
+async def AppGetShabat(ctx):
+    await ctx.response.send_message(getShabat())
+
 def getShabat():
     output = "```css"
     startTimeObj = ""
@@ -30,9 +42,9 @@ def getShabat():
             logFile.write(f"{e}")
         return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
 
-
-def slap():
-    return "Slap:wave: <@375656966145703946>"
+@tree.command(name="slap", description="SLAP THAT @$$", guild= discord.Object(id=843477859020308510))
+async def slap(ctx):
+    await ctx.response.send_message("Slap:wave: <@375656966145703946>")
 
 def avishayHater():
     return "אבישי הייטר"
@@ -107,9 +119,9 @@ commands = {"מתי אבישי": getShabat, "מתי אבישישי": getShabat, 
 
 @client.event
 async def on_ready():
-    print("LOGGED IN", client.user)
-@client.event
+    await tree.sync(guild=discord.Object(id=843477859020308510))
 
+@client.event
 async def on_message(message):
     try:
         global lastCommand
