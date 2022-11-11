@@ -16,7 +16,7 @@ def getShabat():
     startTimeObj = ""
     endTimeObj = ""
     try:
-        for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
+        for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=293397").text)["items"]:
             if ("title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and startTimeObj == ""):
                 startTimeObj = extractTime(event)
                 output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
@@ -46,7 +46,8 @@ def helpCommand():
 1. שישי מתי אבישי
 2. שישי כאפה לאבישי
 3. שישי כאפה לגיא
-4. שישי מי הוא אבישי```
+4. שישי מי הוא אבישי
+5. שישי דקירה```
 """
 
 def guySlap():
@@ -61,7 +62,7 @@ def genericSlap(username):
 def getYomKippur():
     output = "```css"
     try:
-        for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=294421").text)["items"]:
+        for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=293397").text)["items"]:
             if "memo" in event.keys() and event["memo"] == "Erev Yom Kippur":
                 startTimeObj = extractTime(event)
                 output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
@@ -124,6 +125,8 @@ async def on_message(message):
                 lastCommand = msg
             elif (msg.split(" ")[0] == "כאפה"):
                 await message.channel.send(genericSlap(msg.split(" ")[-1]))
+        elif message.author.id == 237622399573557249 and message.content.startswith("היי"):
+            await message.channel.send("היי רון, אני שישי")
     except Exception as e:
         with open("log.txt", "w") as filer:
             filer.write(e)
