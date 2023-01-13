@@ -1,0 +1,2 @@
+'NoneType' object has no attribute 'split'
+2023-01-13 20:53:05.163151

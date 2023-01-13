@@ -1,2 +1,1 @@
-python shayshayBot.py
-pause
+py shayshayBot.py
