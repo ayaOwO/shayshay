@@ -1,2 +1,2 @@
 cd /home/pi/shayshay
-python shayshayBot.py &
+python3 shayshayBot.py &
