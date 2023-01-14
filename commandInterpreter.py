@@ -13,7 +13,7 @@ class CommandInterpreter:
     def chooseCommand(self, message, text):
         response = ""
 
-        if text in ["מתי אבישי", "מתי אבישישי", "מתי אבשישי", "מתי שבת"]:
+        if text in ["מתי אבישי", "מתי אבישישי", "מתי אבשישי", "מתי שבת", "מתי אמיר"]:
             response = self.getShabat()
         elif text in ["כאפה לאבישי", "כאפה לאבשישי"]:
             response = self.slap()
