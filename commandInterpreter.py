@@ -24,6 +24,9 @@ class CommandInterpreter:
         elif text.split(" ")[0] == "כאפה":
             if len(text.split(" ")) == 2:
                 response = self.genericSlap(text.split(" ")[1])
+        elif text.split(" ")[0] == "חיבוק":
+            if len(text.split(" ")) == 2:
+                response = self.genericHug(text.split(" ")[1])
         elif text in ["דקירה"]:
             response = self.stab()
         elif text in ["דאמ"]:
@@ -65,6 +68,15 @@ class CommandInterpreter:
 5. שישי דקירה
 6. שישי דאמ```
     """
+
+    def genericHug(self, username):
+        gifs = ["https://tenor.com/view/love-gif-25904467"]
+        index = 0
+        if username.startswith("ל"):
+            username = username[1:]
+        if not username.startswith("<"):
+            return ""
+        return f"{username}\n{gifs[index]}"
 
     def genericSlap(self, username):
         if username.startswith("ל"):
