@@ -14,7 +14,20 @@ class CommandInterpreter:
         response = ""
 
         if text in ["מתי אבישי", "מתי אבישישי", "מתי אבשישי", "מתי שבת", "מתי אמיר"]:
-            response = self.getShabat()
+            shabat_times = self.getShabat()
+            output = "```css"
+            output += shabat_times[0].strftime("\nStart: %H:%M   %d.%m")
+            output += shabat_times[1].strftime("\nEnd:   %H:%M   %d.%m")
+            names = {"אבישי": "Avishay", "אבשישי": "Avishay", "אבישישי": "Avishay", "אמיר": "Amir", "שבת": "Shabat"}
+            input_name = text.split()[1]
+            if input_name in names:
+                name = names[input_name]
+                output += self.prettyPrintTime(shabat_times[0], shabat_times[1], f"Time left with {name}",
+                                               f"Time until {name} comes back", f"{name} is here!!")
+
+                response = output
+            else:
+                response = ""
         elif text in ["כאפה לאבישי", "כאפה לאבשישי"]:
             response = self.slap()
         elif text in ["מי הוא אבישי", "מי הוא אבשישי", "מי אבישי", "מי אבשישי"]:
@@ -125,21 +138,16 @@ class CommandInterpreter:
         return output
 
     def getShabat(self):
-        output = "```css"
-        startTimeObj = ""
-        endTimeObj = ""
+        shabat_times = [None, None]
         try:
             for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=293397").text)[
                 "items"]:
-                if ("title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and startTimeObj == ""):
-                    startTimeObj = self.extractTime(event)
-                    output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
-                elif ("title_orig" in event.keys() and event["title_orig"] == "Havdalah" and endTimeObj == ""):
-                    endTimeObj = self.extractTime(event)
-                    output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
-
-            return output + self.prettyPrintTime(startTimeObj, endTimeObj, "time left with avishay",
-                                                 "Time until avishay comes back", "Avishay is here!!")
+                if "title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and shabat_times[
+                    0] == None:
+                    shabat_times[0] = self.extractTime(event)
+                elif "title_orig" in event.keys() and event["title_orig"] == "Havdalah" and shabat_times[1] == None:
+                    shabat_times[1] = self.extractTime(event)
+            return shabat_times
         except Exception as e:
             with open("log.txt", "a") as logFile:
                 logFile.write(f"{e}")
