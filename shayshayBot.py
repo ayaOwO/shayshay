@@ -3,6 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 from datetime import datetime
 from commandInterpreter import CommandInterpreter
+from LeaferaCode import LeaferaCode
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -46,6 +47,23 @@ async def on_message(message):
             filer.write("\n")
             filer.write(str(datetime.now()))
         raise
+        
+#leafera
+marked_rooms = set()
+
+@client.event
+async def on_voice_state_update(member, before, after):
+    #open new room and move them in
+    marked_rooms.add(await LeaferaCode.OpenOffice(member, before, after))
+
+    # Check if the new room is now empty
+    if before.channel is not None and before.channel.id in marked_rooms and len(before.channel.members) == 0:
+        await before.channel.delete()
+
+@client.event
+async def on_voice_channel_delete(channel):
+    # Remove the room from the set of marked rooms
+    marked_rooms.discard(channel.id)
 
 
 # running bot
