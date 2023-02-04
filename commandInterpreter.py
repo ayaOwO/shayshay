@@ -13,6 +13,9 @@ class CommandInterpreter:
     def chooseCommand(self, message, text):
         response = ""
 
+        if text == "":
+            if None not in self.last_command:
+                message, text = self.last_command[0], self.last_command[1]
         if text in ["מתי אבישי", "מתי אבישישי", "מתי אבשישי", "מתי שבת", "מתי אמיר"]:
             shabat_times = self.getShabat()
             output = "```css"
@@ -44,9 +47,6 @@ class CommandInterpreter:
             response = self.stab()
         elif text in ["דאמ"]:
             return self.damn()
-        elif text == "":
-            if None not in self.last_command:
-                response = self.chooseCommand(self.last_command[0], self.last_command[1])
         elif message.author.id == 237622399573557249 and message.content.startswith("הי"):
             response = "היי רון, אני שישי"
         else:

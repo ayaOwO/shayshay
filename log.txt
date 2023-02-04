@@ -1,2 +1,2 @@
-'NoneType' object has no attribute 'split'
-2023-01-13 20:53:05.163151
+maximum recursion depth exceeded while calling a Python object
+2023-02-04 17:38:12.462395
