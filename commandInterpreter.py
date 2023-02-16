@@ -1,7 +1,13 @@
 from datetime import datetime
 import json
+
+import discord
 import requests
 import math
+
+from PIL import Image
+from requests import get
+from io import BytesIO
 
 
 class CommandInterpreter:
@@ -12,6 +18,7 @@ class CommandInterpreter:
 
     def chooseCommand(self, message, text):
         response = ""
+        file = None
 
         if text == "":
             if None not in self.last_command:
@@ -46,15 +53,17 @@ class CommandInterpreter:
         elif text in ["דקירה"]:
             response = self.stab()
         elif text in ["דאמ"]:
-            return self.damn()
+            response = self.damn()
         elif message.author.id == 237622399573557249 and message.content.startswith("הי"):
             response = "היי רון, אני שישי"
+        if text in ["אני פיתה"]:
+            response, file = self.pita(message.author.id)
         else:
             pass
 
         if response != "":
             self.last_command = [message, text]
-        return response
+        return response, file
 
     def damn(self):
         return "מה קשור דאמ"
@@ -152,3 +161,28 @@ class CommandInterpreter:
             with open("log.txt", "a") as logFile:
                 logFile.write(f"{e}")
             return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
+
+    def pita(self, userid):
+        discord_api = "https://discord.com/api"
+        discord_cdn = "https://cdn.discordapp.com"
+
+        with open("bot.token") as f:
+            token = f.read()
+        headers = {
+            'authorization': f'Bot {token}'
+        }
+
+        res = get(f"{discord_api}/users/{userid}", headers=headers)
+        avatar_token = res.json()["avatar"]
+
+        res = get(f"{discord_cdn}/avatars/{userid}/{avatar_token}.png?size=64")
+        file = BytesIO(res.content)
+        pfp = Image.open(file)
+
+        pita = Image.open("pita.png")
+        center_width, center_height = pita.size
+        center_width, center_height = (center_width // 2 - pfp.size[0] // 2, center_height // 2 - pfp.size[1] // 2)
+
+        pita.paste(pfp, (center_width, center_height), pfp)
+        pita.save("me.png")
+        return "בתיאבון" + " " + f"<@{userid}>", discord.File("me.png")

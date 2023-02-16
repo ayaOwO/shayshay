@@ -36,9 +36,9 @@ async def on_message(message):
 
         if message.content.startswith(pre):
             text = message.content[len(pre):].strip()
-            response = command_interpreter.chooseCommand(message, text)
+            response, file = command_interpreter.chooseCommand(message, text)
             if response != "":
-                await message.channel.send(response)
+                await message.channel.send(response, file=file)
 
     except Exception as e:
         with open("log.txt", "w") as filer:
