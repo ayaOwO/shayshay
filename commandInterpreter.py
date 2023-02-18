@@ -61,7 +61,7 @@ class CommandInterpreter:
         else:
             pass
 
-        if response != "":
+        if response != "" and text != "אני פיתה":
             self.last_command = [message, text]
         return response, file
 
@@ -166,20 +166,21 @@ class CommandInterpreter:
         discord_api = "https://discord.com/api"
         discord_cdn = "https://cdn.discordapp.com"
 
-        with open("bot.token") as f:
-            token = f.read()
+        with open("bot.token", "r") as f:
+            token = f.read().rstrip("\n")
         headers = {
             'authorization': f'Bot {token}'
         }
 
-        res = get(f"{discord_api}/users/{userid}", headers=headers)
+        url = f"{discord_api}/users/{userid}"
+        res = get(url, headers=headers)
         avatar_token = res.json()["avatar"]
 
         res = get(f"{discord_cdn}/avatars/{userid}/{avatar_token}.png?size=64")
         file = BytesIO(res.content)
-        pfp = Image.open(file)
+        pfp = Image.open(file).convert('RGBA')
 
-        pita = Image.open("pita.png")
+        pita = Image.open("pita.png").convert('RGBA')
         center_width, center_height = pita.size
         center_width, center_height = (center_width // 2 - pfp.size[0] // 2, center_height // 2 - pfp.size[1] // 2)
 
