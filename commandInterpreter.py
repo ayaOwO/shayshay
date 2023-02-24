@@ -24,32 +24,19 @@ class CommandInterpreter:
             if None not in self.last_command:
                 message, text = self.last_command[0], self.last_command[1]
         if text in ["מתי אבישי", "מתי אבישישי", "מתי אבשישי", "מתי שבת", "מתי אמיר"]:
-            shabat_times = self.getShabat()
-            output = "```css"
-            output += shabat_times[0].strftime("\nStart: %H:%M   %d.%m")
-            output += shabat_times[1].strftime("\nEnd:   %H:%M   %d.%m")
-            names = {"אבישי": "Avishay", "אבשישי": "Avishay", "אבישישי": "Avishay", "אמיר": "Amir", "שבת": "Shabat"}
-            input_name = text.split()[1]
-            if input_name in names:
-                name = names[input_name]
-                output += self.prettyPrintTime(shabat_times[0], shabat_times[1], f"Time left with {name}",
-                                               f"Time until {name} comes back", f"{name} is here!!")
-
-                response = output
-            else:
-                response = ""
+            response = self.get_shabat(text)
         elif text in ["כאפה לאבישי", "כאפה לאבשישי"]:
             response = self.slap()
         elif text in ["מי הוא אבישי", "מי הוא אבשישי", "מי אבישי", "מי אבשישי"]:
-            response = self.avishayHater()
+            response = self.avishay_hater()
         elif text in ["עזרה", "חלפ"]:
-            response = self.helpCommand()
+            response = self.help_command()
         elif text.split(" ")[0] == "כאפה":
             if len(text.split(" ")) == 2:
-                response = self.genericSlap(text.split(" ")[1])
+                response = self.generic_slap(text.split(" ")[1])
         elif text.split(" ")[0] == "חיבוק":
             if len(text.split(" ")) == 2:
-                response = self.genericHug(text.split(" ")[1])
+                response = self.generic_hug(text.split(" ")[1])
         elif text in ["דקירה"]:
             response = self.stab()
         elif text in ["דאמ"]:
@@ -57,7 +44,7 @@ class CommandInterpreter:
         elif message.author.id == 237622399573557249 and message.content.startswith("הי"):
             response = "היי רון, אני שישי"
         if text in ["אני פיתה"]:
-            response, file = self.pita(message.author.id)
+            response, file = self.get_pita(message.author.id)
         else:
             pass
 
@@ -74,13 +61,13 @@ class CommandInterpreter:
     def slap(self):
         return "Slap:wave: <@375656966145703946>"
 
-    def avishayHater(self):
+    def avishay_hater(self):
         return "אבישי הייטר"
 
-    def giveCookie(self):
+    def give_cookie(self):
         return ":cookie:"
 
-    def helpCommand(self):
+    def help_command(self):
         return """```
 פקודות:
 1. שישי מתי אבישי
@@ -91,7 +78,7 @@ class CommandInterpreter:
 6. שישי דאמ```
     """
 
-    def genericHug(self, username):
+    def generic_hug(self, username):
         gifs = ["https://tenor.com/view/love-gif-25904467"]
         index = 0
         if username.startswith("ל"):
@@ -100,36 +87,36 @@ class CommandInterpreter:
             return ""
         return f"{username}\n{gifs[index]}"
 
-    def genericSlap(self, username):
+    def generic_slap(self, username):
         if username.startswith("ל"):
             username = username[1:]
         if not username.startswith("<"):
             return ""
         return f"Slap:wave: {username}"
 
-    def getYomKippur(self):
+    def get_yom_kippur(self):
         output = "```css"
         try:
             for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=293397").text)[
                 "items"]:
                 if "memo" in event.keys() and event["memo"] == "Erev Yom Kippur":
-                    startTimeObj = self.extractTime(event)
+                    startTimeObj = self._extract_time(event)
                     output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
                 elif "memo" in event.keys() and event["memo"] == "Yom Kippur":
-                    endTimeObj = self.extractTime(event)
+                    endTimeObj = self._extract_time(event)
                     output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
-            return output + self.prettyPrintTime(startTimeObj, endTimeObj, "Time until the start of the chom",
+            return output + self._format_time(startTimeObj, endTimeObj, "Time until the start of the chom",
                                                  "Time left until you can eat", "you can eat! do eat! now!")
         except Exception as e:
             return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
 
-    def extractTime(self, event):
+    def _extract_time(self, event):
         time = event["date"].split("T")
         time[0] = time[0].split("-")
         time[1] = time[1].split(":")
         return datetime(int(time[0][0]), int(time[0][1]), int(time[0][2]), int(time[1][0]), int(time[1][1]))
 
-    def prettyPrintTime(self, start, end, until, happening, happened):
+    def _format_time(self, start, end, until, happening, happened):
         if datetime.now() > end:  # after the event ended
             output = "\n\n" + happened + "```"
         elif datetime.now() > start:  # in the event
@@ -146,23 +133,41 @@ class CommandInterpreter:
                 math.floor(tot / 60 / 60)) + " hours\n" + str(math.floor(tot / 60 / 30)) + " average lol games```"
         return output
 
-    def getShabat(self):
+    def _format_get_shabat(self, shabat_times, text):
+        output = "```css"
+        output += shabat_times[0].strftime("\nStart: %H:%M   %d.%m")
+        output += shabat_times[1].strftime("\nEnd:   %H:%M   %d.%m")
+        names = {"אבישי": "Avishay", "אבשישי": "Avishay", "אבישישי": "Avishay", "אמיר": "Amir", "שבת": "Shabat"}
+        input_name = text.split()[1]
+        if input_name in names:
+            name = names[input_name]
+            output += self._format_time(shabat_times[0], shabat_times[1], f"Time left with {name}",
+                                           f"Time until {name} comes back", f"{name} is here!!")
+            return output
+        else:
+            return ""
+
+    def get_shabat(self, text):
+        shabat_times = self._get_shabat_times()
+        return self._format_get_shabat(shabat_times, text)
+
+    def _get_shabat_times(self):
         shabat_times = [None, None]
         try:
             for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=293397").text)[
                 "items"]:
                 if "title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and shabat_times[
                     0] == None:
-                    shabat_times[0] = self.extractTime(event)
+                    shabat_times[0] = self._extract_time(event)
                 elif "title_orig" in event.keys() and event["title_orig"] == "Havdalah" and shabat_times[1] == None:
-                    shabat_times[1] = self.extractTime(event)
+                    shabat_times[1] = self._extract_time(event)
             return shabat_times
         except Exception as e:
             with open("log.txt", "a") as logFile:
                 logFile.write(f"{e}")
             return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
 
-    def pita(self, userid):
+    def get_pita(self, userid):
         discord_api = "https://discord.com/api"
         discord_cdn = "https://cdn.discordapp.com"
 
