@@ -20,7 +20,7 @@ tree = app_commands.CommandTree(client)
 @tree.command(name="שבת", description="Tells you when Avishay comes back, so the grind can continue",
               guild=discord.Object(id=server_id))
 async def app_get_shabat(ctx):
-    await ctx.response.send_message(command_interpreter.get_shabat("אבישי"))
+    await ctx.response.send_message(command_interpreter.get_shabat("hello אבישי"))
 
 
 @client.event
