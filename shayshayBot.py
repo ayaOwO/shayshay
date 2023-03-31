@@ -12,7 +12,8 @@ client = discord.Client(intents=intents)
 # functions
 server_id = 843477859020308510
 pre = "שישי"
-command_interpreter = CommandInterpreter()
+help_file_name = "help.txt"
+command_interpreter = CommandInterpreter(help_file_name)
 bot = commands.Bot(command_prefix=pre, intents=intents)
 tree = app_commands.CommandTree(client)
 

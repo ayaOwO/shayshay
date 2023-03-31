@@ -13,8 +13,8 @@ from io import BytesIO
 class CommandInterpreter:
     last_command = [None, None]
 
-    def __init__(self):
-        pass
+    def __init__(self, help_file_name):
+        self.help_file_name = help_file_name
 
     def choose_command(self, message, text):
         response = ""
@@ -68,18 +68,9 @@ class CommandInterpreter:
         return ":cookie:"
 
     def help_command(self):
-        return """```
-פקודות:
-1. שישי מתי אבישי
-2. שישי כאפה לאבישי
-3. שישי כאפה @שם
-4. שישי מי הוא אבישי
-5. שישי דקירה
-6. שישי דאמ
-7. שישי חיבוק @שם
-8. שישי דקירה
-9. שישי אני פיתה
-10. שישי עזרה```"""
+        with open(self.help_file_name, "r") as help_file:
+            text = help_file.read()
+        return text
 
     def generic_hug(self, username):
         gifs = ["https://tenor.com/view/love-gif-25904467"]
