@@ -75,8 +75,11 @@ class CommandInterpreter:
 3. שישי כאפה @שם
 4. שישי מי הוא אבישי
 5. שישי דקירה
-6. שישי דאמ```
-    """
+6. שישי דאמ
+7. שישי חיבוק @שם
+8. שישי דקירה
+9. שישי אני פיתה
+10. שישי עזרה```"""
 
     def generic_hug(self, username):
         gifs = ["https://tenor.com/view/love-gif-25904467"]
