@@ -16,7 +16,7 @@ class CommandInterpreter:
     def __init__(self):
         pass
 
-    def chooseCommand(self, message, text):
+    def choose_command(self, message, text):
         response = ""
         file = None
 
@@ -97,22 +97,6 @@ class CommandInterpreter:
             return ""
         return f"Slap:wave: {username}"
 
-    def get_yom_kippur(self):
-        output = "```css"
-        try:
-            for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=293397").text)[
-                "items"]:
-                if "memo" in event.keys() and event["memo"] == "Erev Yom Kippur":
-                    startTimeObj = self._extract_time(event)
-                    output += startTimeObj.strftime("\nStart: %H:%M   %d.%m")
-                elif "memo" in event.keys() and event["memo"] == "Yom Kippur":
-                    endTimeObj = self._extract_time(event)
-                    output += endTimeObj.strftime("\nEnd:   %H:%M   %d.%m")
-            return output + self._format_time(startTimeObj, endTimeObj, "Time until the start of the chom",
-                                                 "Time left until you can eat", "you can eat! do eat! now!")
-        except Exception as e:
-            return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
-
     def _extract_time(self, event):
         time = event["date"].split("T")
         time[0] = time[0].split("-")
@@ -136,33 +120,31 @@ class CommandInterpreter:
                 math.floor(tot / 60 / 60)) + " hours\n" + str(math.floor(tot / 60 / 30)) + " average lol games```"
         return output
 
-    def _format_get_shabat(self, shabat_times, text):
+    def _format_get_shabat(self, shabat_times, input_name):
         output = "```css"
         output += shabat_times[0].strftime("\nStart: %H:%M   %d.%m")
         output += shabat_times[1].strftime("\nEnd:   %H:%M   %d.%m")
         names = {"אבישי": "Avishay", "אבשישי": "Avishay", "אבישישי": "Avishay", "אמיר": "Amir", "שבת": "Shabat"}
-        input_name = text.split()[1]
         if input_name in names:
             name = names[input_name]
             output += self._format_time(shabat_times[0], shabat_times[1], f"Time left with {name}",
-                                           f"Time until {name} comes back", f"{name} is here!!")
+                                        f"Time until {name} comes back", f"{name} is here!!")
             return output
         else:
             return ""
 
     def get_shabat(self, text):
         shabat_times = self._get_shabat_times()
-        return self._format_get_shabat(shabat_times, text)
+        name = text.split(" ")[1]
+        return self._format_get_shabat(shabat_times, name)
 
     def _get_shabat_times(self):
         shabat_times = [None, None]
         try:
-            for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=293397").text)[
-                "items"]:
-                if "title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and shabat_times[
-                    0] == None:
+            for event in json.loads(requests.get("https://www.hebcal.com/shabbat?cfg=json;geonameid=293397").text)["items"]:
+                if "title_orig" in event.keys() and event["title_orig"] == "Candle lighting" and shabat_times[0] is None:
                     shabat_times[0] = self._extract_time(event)
-                elif "title_orig" in event.keys() and event["title_orig"] == "Havdalah" and shabat_times[1] == None:
+                elif "title_orig" in event.keys() and event["title_orig"] == "Havdalah" and shabat_times[1] is None:
                     shabat_times[1] = self._extract_time(event)
             return shabat_times
         except Exception as e:

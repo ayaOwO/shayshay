@@ -36,7 +36,7 @@ async def on_message(message):
 
         if message.content.startswith(pre):
             text = message.content[len(pre):].strip()
-            response, file = command_interpreter.chooseCommand(message, text)
+            response, file = command_interpreter.choose_command(message, text)
             if response != "":
                 await message.channel.send(response, file=file)
 
