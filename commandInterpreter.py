@@ -23,7 +23,7 @@ class CommandInterpreter:
         if text == "":
             if None not in self.last_command:
                 message, text = self.last_command[0], self.last_command[1]
-        if text in ["מתי אבישי", "מתי אבישישי", "מתי אבשישי", "מתי שבת", "מתי אמיר"]:
+        if len(text.split(" ")) == 2 and text.split(" ")[0] == "מתי":
             response = self.get_shabat(text)
         elif text in ["כאפה לאבישי", "כאפה לאבשישי"]:
             response = self.slap()
@@ -105,19 +105,19 @@ class CommandInterpreter:
 
     def _format_time(self, start, end, until, happening, happened):
         if datetime.now() > end:  # after the event ended
-            output = "\n\n" + happened + "```"
+            output = "\n\n" + happened
         elif datetime.now() > start:  # in the event
             diff = end - datetime.now()
             output = "\n\n" + happening + ":\n"
             tot = diff.total_seconds()
             output += str(math.floor(tot)) + " seconds\n" + str(math.floor(tot / 60)) + " minutes\n" + str(
-                math.floor(tot / 60 / 60)) + " hours\n" + str(math.floor(tot / 60 / 30)) + " average lol games```"
+                math.floor(tot / 60 / 60)) + " hours\n" + str(math.floor(tot / 60 / 30)) + " average lol games"
         else:  # before the event
             diff = start - datetime.now()  # get diff
             output = "\n\n" + until + ":\n"
             tot = diff.total_seconds()
             output += str(math.floor(tot)) + " seconds\n" + str(math.floor(tot / 60)) + " minutes\n" + str(
-                math.floor(tot / 60 / 60)) + " hours\n" + str(math.floor(tot / 60 / 30)) + " average lol games```"
+                math.floor(tot / 60 / 60)) + " hours\n" + str(math.floor(tot / 60 / 30)) + " average lol games"
         return output
 
     def _format_get_shabat(self, shabat_times, input_name):
@@ -127,11 +127,11 @@ class CommandInterpreter:
         names = {"אבישי": "Avishay", "אבשישי": "Avishay", "אבישישי": "Avishay", "אמיר": "Amir", "שבת": "Shabat"}
         if input_name in names:
             name = names[input_name]
-            output += self._format_time(shabat_times[0], shabat_times[1], f"Time left with {name}",
-                                        f"Time until {name} comes back", f"{name} is here!!")
-            return output
         else:
-            return ""
+            name = input_name
+        output += self._format_time(shabat_times[0], shabat_times[1], f"Time left with {name}",
+                                    f"Time until {name} comes back", f"{name} is here!!")
+        return output + "```"
 
     def get_shabat(self, text):
         shabat_times = self._get_shabat_times()
