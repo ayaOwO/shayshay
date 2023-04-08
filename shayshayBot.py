@@ -14,9 +14,10 @@ client = orchestrator.create_client()
 tree = app_commands.CommandTree(client)
 
 # functions
-server_id = 843477859020308510
+server_id = 1094309499994640494
 
 
+# try client.command
 @tree.command(name="שבת", description="Tells you when Avishay comes back, so the grind can continue",
               guild=discord.Object(id=server_id))
 async def app_get_shabat(ctx):
@@ -26,10 +27,10 @@ async def app_get_shabat(ctx):
 @client.event
 async def on_ready():
     await tree.sync(guild=discord.Object(id=server_id))
-    guild_string = ""
+    guilds_data = []
     for guild in client.guilds:
-        guild_string += f"Server: {guild.name}::id: {guild.id}::Members count: {len(guild.members)}"
-    logger.info(guild_string)
+        guilds_data.append(f"Server: {guild.name}::id: {guild.id}::Members count: {len(guild.members)}")
+    logger.info("<->".join(guilds_data))
 
 
 @client.event
