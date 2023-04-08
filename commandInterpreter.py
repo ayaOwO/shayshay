@@ -16,14 +16,13 @@ class CommandInterpreter:
     def __init__(self, help_file_name):
         self.help_file_name = help_file_name
 
-    def choose_command(self, message, text):
+    def choose_command(self, message, text, identifier):
         response = ""
         file = None
-        server_id = str(message.guild.id)
 
         if text == "":
-            if server_id in self.last_command:
-                server_last_command = self.last_command[server_id]
+            if identifier in self.last_command:
+                server_last_command = self.last_command[identifier]
                 if None not in server_last_command:
                     message, text = server_last_command[0], server_last_command[1]
 
@@ -53,7 +52,7 @@ class CommandInterpreter:
             pass
 
         if response != "" and text != "אני פיתה":
-            self.last_command[str(message.guild.id)] = (message, text)
+            self.last_command[identifier] = (message, text)
         return response, file
 
     def damn(self):
