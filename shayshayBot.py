@@ -26,6 +26,8 @@ async def app_get_shabat(ctx):
 @client.event
 async def on_ready():
     await tree.sync(guild=discord.Object(id=server_id))
+    for guild in client.guilds:
+        logger.info(f"Server: {guild.name}::id: {guild.id}::Members count: {len(guild.members)}")
 
 
 @client.event
