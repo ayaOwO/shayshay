@@ -13,8 +13,9 @@ from io import BytesIO
 class CommandInterpreter:
     last_command = {}
 
-    def __init__(self, help_file_name):
+    def __init__(self, logger, help_file_name):
         self.help_file_name = help_file_name
+        self.logger = logger
 
     def choose_command(self, message, text, identifier):
         response = ""
@@ -142,8 +143,7 @@ class CommandInterpreter:
                     shabat_times[1] = self._extract_time(event)
             return shabat_times
         except Exception as e:
-            with open("log.txt", "a") as logFile:
-                logFile.write(f"{e}")
+            self.logger.error(e)
             return "An error has accurred!\nPlease try again at a later date\nMake sure to let <@280034350051885057> know"
 
     def get_pita(self, userid):

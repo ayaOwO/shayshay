@@ -24,8 +24,8 @@ class Orchestrator():
         print(f'token is {token}')
         return token
 
-    def create_command_interpreter(self, help_file_name):
-        return CommandInterpreter(help_file_name)
+    def create_command_interpreter(self, logger, help_file_name):
+        return CommandInterpreter(logger, help_file_name)
 
     def create_intents(self):
         intents = discord.Intents.default()

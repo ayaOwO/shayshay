@@ -6,8 +6,8 @@ from datetime import datetime
 
 orchestrator = Orchestrator()
 help_file_name = "help.txt"
-command_interpreter = orchestrator.create_command_interpreter(help_file_name)
 logger = orchestrator.create_logger()
+command_interpreter = orchestrator.create_command_interpreter(logger, help_file_name)
 pre = "שישי"
 bot = orchestrator.create_bot(pre)
 client = orchestrator.create_client()
@@ -54,10 +54,7 @@ async def on_message(message):
                 await message.channel.send(response, file=file)
 
     except Exception as e:
-        with open("log.txt", "w") as filer:
-            filer.write(str(e))
-            filer.write("\n")
-            filer.write(str(datetime.now()))
+        logger.error(e)
         raise
 
 
