@@ -36,7 +36,12 @@ async def on_message(message):
 
         if message.content.startswith(pre):
             text = message.content[len(pre):].strip()
+
+            logging_data = (str(message.id), message.guild.name, message.channel.name, message.author.name, text)
+            logger.info("<->".join(logging_data))
             response, file = command_interpreter.choose_command(message, text)
+            logging_data = (str(message.id), response)
+            logger.info("<->".join(logging_data))
             if response != "":
                 await message.channel.send(response, file=file)
 
