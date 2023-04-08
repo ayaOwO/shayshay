@@ -14,7 +14,7 @@ client = orchestrator.create_client()
 tree = app_commands.CommandTree(client)
 
 # functions
-server_id = 1040923447188004864
+server_id = 843477859020308510
 
 
 @tree.command(name="שבת", description="Tells you when Avishay comes back, so the grind can continue",
