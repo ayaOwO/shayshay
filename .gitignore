@@ -1,7 +1,6 @@
 # Shayshay specific
 *.log
 me.png
-log.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
