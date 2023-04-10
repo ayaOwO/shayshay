@@ -6,7 +6,8 @@ from datetime import datetime
 
 orchestrator = Orchestrator()
 help_file_name = "help.txt"
-logger = orchestrator.create_logger()
+logger = orchestrator.create_logger("shayshay")
+
 command_interpreter = orchestrator.create_command_interpreter(logger, help_file_name)
 pre = "שישי"
 bot = orchestrator.create_bot(pre)
@@ -14,7 +15,7 @@ client = orchestrator.create_client()
 tree = app_commands.CommandTree(client)
 
 # functions
-server_id = 1094309499994640494
+server_id = 843477859020308510
 
 
 # try client.command
