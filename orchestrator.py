@@ -1,6 +1,5 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
-from discord.ext import commands
 
 import discord
 
@@ -8,8 +7,9 @@ from commandInterpreter import CommandInterpreter
 
 
 class Orchestrator():
+
     def create_logger(self, name):
-        logger = logging.getLogger(name)
+        logger = logging.Logger(name)
         formatter = logging.Formatter(fmt="%(asctime)s :: %(levelname)s :: %(message)s")
         handler = TimedRotatingFileHandler(f"./logs/{name}.log", backupCount=10, encoding="utf-8", when="d")
         handler.formatter = formatter
@@ -35,4 +35,3 @@ class Orchestrator():
     def create_client(self):
         intents = self.create_intents()
         return discord.Client(intents=intents)
-

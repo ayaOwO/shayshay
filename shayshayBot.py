@@ -30,7 +30,6 @@ async def on_ready():
     for guild in client.guilds:
         guilds_data.append(f"Server: {guild.name}::id: {guild.id}::Members count: {len(guild.members)}")
     logger.info("<->".join(guilds_data))
-    logger.info("started")
 
 
 @client.event
