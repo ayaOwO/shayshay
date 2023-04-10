@@ -2,7 +2,6 @@ from orchestrator import Orchestrator
 
 import discord
 from discord import app_commands
-from datetime import datetime
 
 orchestrator = Orchestrator()
 help_file_name = "help.txt"
@@ -17,7 +16,6 @@ tree = app_commands.CommandTree(client)
 server_id = 843477859020308510
 
 
-# try client.command
 @tree.command(name="שבת", description="Tells you when Avishay comes back, so the grind can continue")
 async def app_get_shabat(ctx):
     await ctx.response.send_message(command_interpreter.get_shabat("hello אבישי"))
