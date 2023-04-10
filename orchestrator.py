@@ -9,7 +9,6 @@ from commandInterpreter import CommandInterpreter
 
 class Orchestrator():
     def create_logger(self, name):
-        print(name)
         logger = logging.getLogger(name)
         formatter = logging.Formatter(fmt="%(asctime)s :: %(levelname)s :: %(message)s")
         handler = TimedRotatingFileHandler(f"./logs/{name}.log", backupCount=10, encoding="utf-8", when="d")
@@ -33,12 +32,7 @@ class Orchestrator():
 
         return intents
 
-    def create_bot(self, pre):
-        intents = self.create_intents()
-        bot = commands.Bot(command_prefix=pre, intents=intents)
-
-        return bot
-
     def create_client(self):
         intents = self.create_intents()
         return discord.Client(intents=intents)
+
