@@ -11,7 +11,7 @@ class Orchestrator():
     def create_logger(self, name):
         logger = logging.Logger(name)
         formatter = logging.Formatter(fmt="%(asctime)s :: %(levelname)s :: %(message)s")
-        handler = TimedRotatingFileHandler(f"./logs/{name}.log", backupCount=10, encoding="utf-8", when="d")
+        handler = TimedRotatingFileHandler(f"./logs/{name}.log", backupCount=10, encoding="utf-8", when="midnight")
         handler.formatter = formatter
         logger.addHandler(handler)
 
